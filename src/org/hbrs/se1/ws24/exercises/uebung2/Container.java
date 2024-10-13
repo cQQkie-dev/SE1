@@ -11,27 +11,25 @@ public class Container {
             if(m.getID().equals(member.getID())){
                 throw new ContainerException("Das Member-Objekt mit der ID " + member.getID() + " ist bereits vorhanden!");
             }
-            members.add(member);
         }
+        members.add(member);
     }
 
-    public void deleteMember(Integer id){
-        for(Member m: members){
-            if(m.getID().equals(id)){
+    public String deleteMember(Integer id) {
+        for (Member m : members) {
+            if (m.getID().equals(id)) {
                 members.remove(m);
-                return;
+                return "Member mit ID " + id + " wurde gelöscht.";
             }
         }
-        System.out.println("Fehler: Kein Member mit ID" + id + " gefunden.");
-        return;
+        return "Member mit ID " + id + " nicht gefunden.";
     }
-
     public void dump(){
         for(Member m: members){
-            System.out.println(m.toString());
+            System.out.println(m);
         }
     }
     public int size(){
-        return members.size();
+        return members.toArray().length;
     }
 }
