@@ -1,20 +1,29 @@
 package org.hbrs.se1.ws24.tests.uebung2;
 
 import org.hbrs.se1.ws24.exercises.uebung2.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ContainerTest {
+    // das ist die alte ContainerTest-Klasse aus Übung 2 angepasst
+    // an die neue Container-Klasse mit der Singleton-Strategie
     private Container container;
     private Member m1;
     private Member m2;
 
     @BeforeEach
     public void setUp() {
-        container = new Container();
+        container = Container.getInstance();
         m1 = new ConcreteMember(1);
         m2 = new ConcreteMember(2);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Liste leeren, um saubere Tests zu gewährleisten
+        container.getCurrentList().clear();
     }
 
     @Test
@@ -49,7 +58,8 @@ public class ContainerTest {
         java.io.ByteArrayOutputStream outContent = new java.io.ByteArrayOutputStream();
         System.setOut(new java.io.PrintStream(outContent));
 
-        container.dump();
+        MemberView memberView = new MemberView();
+        memberView.dump(container.getCurrentList());
 
         String expectedOutput = "Member (ID = 1)\nMember (ID = 2)\n";
         assertEquals(expectedOutput, outContent.toString());

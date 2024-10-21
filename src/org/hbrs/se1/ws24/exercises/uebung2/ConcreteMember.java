@@ -1,6 +1,6 @@
 package org.hbrs.se1.ws24.exercises.uebung2;
 
-public class ConcreteMember implements Member{
+public class    ConcreteMember implements Member{
     private Integer id;
 
     public ConcreteMember(Integer id){

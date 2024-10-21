@@ -1,6 +1,5 @@
 package org.hbrs.se1.ws24.exercises.uebung3.persistence;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.List;
 
 public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
@@ -22,7 +21,18 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
      * (Last Access: Oct, 15th 2024)
      */
     public void save(List<E> member) throws PersistenceException  {
-
+        try{
+            FileOutputStream fos = new FileOutputStream(location);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(member);
+            System.out.println("Gespeichert!");
+            oos.close();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable, "Fehler beim Speichern: " + e.getMessage());
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable, "Fehler beim Speichern: " + e.getMessage());
+        }
     }
 
     @Override
@@ -33,7 +43,25 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
      */
     public List<E> load() throws PersistenceException  {
         // Some Coding hints ;-)
+        try {
+            FileInputStream fis = new FileInputStream(location);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Object obj = ois.readObject();
 
+            List<E> newListe = null;
+            if (obj instanceof List<?>) {
+                newListe = (List) obj;
+            }
+            ois.close();
+            fis.close();
+            return newListe;
+        } catch (FileNotFoundException e) {
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable, "Fehler beim Laden: " + e.getMessage());
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable, "Fehler beim Laden: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new PersistenceException(PersistenceException.ExceptionType.ImplementationNotAvailable, "Fehler beim Laden: " + e.getMessage());
+        }
         // ObjectInputStream ois = null;
         // FileInputStream fis = null;
         // List<...> newListe =  null;
@@ -52,6 +80,5 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
         // return newListe
 
         // and finally close the streams
-        return null;
     }
 }
