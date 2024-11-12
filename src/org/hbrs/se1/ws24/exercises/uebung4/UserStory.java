@@ -34,4 +34,8 @@ public class UserStory implements Member {
     public Integer getID() {
         return this.id;
     }
+    @Override
+    public String toString() {
+        return String.format("ID: %s, Title: %s, Priority: %.2f", id, title, priorityValue);
+    }
 }
